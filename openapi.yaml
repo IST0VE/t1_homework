@@ -13,8 +13,8 @@ tags:
   - name: Счета
   - name: Пользователи
 
-paths:
-  /accounts/{accountId}: ##camelCase, kebab-case, snake_case. Без  глаголов в энпоинтах
+paths: 
+  /accounts/{accountId}:
     get:
       tags:
         - Счета
@@ -22,9 +22,9 @@ paths:
       description: Возвращает информацию о конкретном банковском счете
       parameters:
         - name: accountId
-          in: path ##query
+          in: path
           required: true
-          description: Уникальный идентификатор счета
+          description: Уникальный идентификатор счета 
           schema:
             type: integer
       responses:
@@ -33,29 +33,67 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  accountId:
-                    type: integer
-                    description: Уникальный идентификатор счета
-                    example: 11111343
-                  accountNumber:
-                    type: string
-                    description: Номер счета
-                    example: "40700281000000000001"
-                  balance:
-                    type: number
-                    format: double
-                    description: Баланс счета в рублях
-                    example: 2810.33
-                  status:
-                    type: string
-                    description: Статус счета
-                    example: "ACTIVE"
-                    enum:
-                      - ACTIVE
-                      - CLOSED
-                      - RESERVED
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Плохой запрос
+        '401':
+          description: Неавторизован
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Не найдено
+        '500':
+          description: Сервер не доступен
+    patch:
+      tags:
+        - Счета
+      summary: Частично обновить информацию о банковском счете
+      description: Позволяет обновить отдельные поля банковского счёта
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: Уникальный идентификатор счета 
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdate'
+      responses:
+        '200':
+          description: Обновлено успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Плохой запрос
+        '401':
+          description: Неавторизован
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Не найдено
+        '500':
+          description: Сервер не доступен
+    delete:
+      tags:
+        - Счета
+      summary: Удалить банковский счет
+      description: Удаляет указанный банковский счет
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: Уникальный идентификатор счета 
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Удалено успешно
         '400':
           description: Плохой запрос
         '401':
@@ -88,7 +126,7 @@ paths:
                   accountId:
                     type: integer
                     description: Уникальный идентификатор счета
-                    example: 70203333
+                    example: 5578873649 
         '400':
           description: Плохой запрос
         '401':
@@ -99,11 +137,14 @@ paths:
           description: Не найдено
         '500':
           description: Сервер не доступен
+              
   /users/{userId}:
     put:
       tags:
         - Пользователи
       summary: Обновить информацию о пользователе
+      description: Обновляет информацию о пользователе
+      deprecated: true
       parameters:
         - name: userId
           in: path
@@ -132,6 +173,7 @@ paths:
           description: Данные не найдены
         '500':
           description: Сервер не доступен
+
 components:
   schemas:
     NewAccount:
@@ -147,16 +189,16 @@ components:
           example: 10
         firstName:
           type: string
-          description: Фамилия владельца
-          example: "Свиридова"
+          description: Имя владельца
+          example: "Марина"
         middleName:
           type: string
           description: Отчество владельца
           example: "Владимировна"
         lastName:
           type: string
-          description: Имя владельца
-          example: "Марина"
+          description: Фамилия владельца
+          example: "Свиридова"
       required:
         - accountType
         - firstName
@@ -175,3 +217,51 @@ components:
           description: Возраст
       required:
         - name
+    AccountUpdate:
+      type: object
+      properties:
+        accountType:
+          type: string
+          description: Тип счета
+          example: "DEBET"
+        balance:
+          type: number
+          description: Баланс счета
+          example: 120345.78
+        status:
+          type: string
+          description: Статус счета
+          example: "ACTIVE"
+          enum:
+            - ACTIVE
+            - CLOSED
+            - RESERVED
+    Account:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          description: Уникальный идентификатор счета 
+          example: 5578873649
+        accountNumber:
+          type: string
+          description: Номер счета 
+          example: "40700281000000000001"
+        balance:
+          type: number
+          format: double
+          description: Баланс счета в рублях
+          example: 98475.75
+        status:
+          type: string
+          description: Статус счета 
+          example: "ACTIVE"
+          enum:
+            - ACTIVE
+            - CLOSED
+            - RESERVED
+      required:
+        - accountId
+        - accountNumber
+        - balance
+        - status

@@ -92,7 +92,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        '200':
           description: Удалено успешно
         '400':
           description: Плохой запрос

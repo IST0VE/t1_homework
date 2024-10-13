@@ -48,7 +48,9 @@ paths:
       tags:
         - Счета
       summary: Частично обновить информацию о банковском счете
-      description: Позволяет обновить отдельные поля банковского счёта
+      description: |
+        Позволяет обновить отдельные поля банковского счёта.
+        **Важно:** хотя бы одно из полей `accountType`, `balance` или `status` должно быть передано.
       parameters:
         - name: accountId
           in: path
@@ -62,6 +64,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AccountUpdate'
+            examples:
+              validExample:
+                summary: Пример корректного запроса
+                value:
+                  balance: 120094.8
       responses:
         '200':
           description: Обновлено успешно
@@ -236,6 +243,10 @@ components:
             - ACTIVE
             - CLOSED
             - RESERVED
+      anyOf:
+        - required: [accountType]
+        - required: [balance]
+        - required: [status]
     Account:
       type: object
       properties:

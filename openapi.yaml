@@ -133,20 +133,7 @@ paths:
                   accountId:
                     type: integer
                     description: Уникальный идентификатор счета
-                    example: 5578873649 
-                  accountNumber:
-                    type: string
-                    description: Номер счета
-                    example: "40700281000000000001"
-                  balance:
-                    type: number
-                    format: float
-                    description: Баланс счета
-                    example: 0.00
-                  status:
-                    type: string
-                    description: Статус счета
-                    example: "ACTIVE"   
+                    example: 5578873649
         '400':
           description: Плохой запрос
         '401':
